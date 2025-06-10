@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小老鼠和好游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: radial-gradient(circle, #ffc0cb, #ffb6c1);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .btn {
+            padding: 22px 50px;
+            font-size: 32px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            min-width: 180px;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+            border-radius: 50px;
+            z-index: -1;
+        }
+        
+        .btn:hover:before {
+            transform: scale(1);
+        }
+        
+        #yesBtn {
+            background: linear-gradient(to right, #4caf50, #8bc34a);
+            color: white;
+            transform: scale(1);
+        }
+        
+        #noBtn {
+            background: linear-gradient(to right, #ff5252, #ff4081);
+            color: white;
+            transform: scale(1);
+        }
+        
+        .mice-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        /* 超可爱小老鼠样式 */
+        .mouse {
+            position: absolute;
+            width: 150px;
+            height: 130px;
+            z-index: 5;
+            top: 50%;
+            transform: translateY(-50%);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+        }
+        
+        .mouse-body {
+            position: absolute;
+            width: 120px;
+            height: 100px;
+            background: #f0f0f0;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            top: 20px;
+        }
+        
+        .mouse-ear {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            top: 0;
+            z-index: 2;
+        }
+        
+        .mouse-left .mouse-ear:first-child {
+            left: 15px;
+        }
+        
+        .mouse-right .mouse-ear:first-child {
+            right: 15px;
+        }
+        
+        .mouse-ear:before {
+            content: '';
+            position: absolute;
+            width: 65%;
+            height: 65%;
+            background: #ffb6c1;
+            border-radius: 50%;
+            top: 17.5%;
+            left: 17.5%;
+        }
+        
+        .mouse-eye {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            top: 45px;
+            z-index: 3;
+        }
+        
+        .mouse-left .mouse-eye {
+            left: 35px;
+        }
+        
+        .mouse-right .mouse-eye {
+            right: 35px;
+        }
+        
+        .mouse-eye:before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 4px;
+            left: 4px;
+        }
+        
+        .mouse-nose {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #ff9ebb;
+            border-radius: 50%;
+            top: 70px;
+            z-index: 4;
+        }
+        
+        .mouse-left .mouse-nose {
+            left: 60px;
+        }
+        
+        .mouse-right .mouse-nose {
+            right: 60px;
+        }
+        
+        .mouse-blush {
+            position: absolute;
+            width: 25px;
+            height: 15px;
+            background: #ffb6c1;
+            opacity: 0.6;
+            border-radius: 50%;
+            top: 55px;
+            z-index: 3;
+        }
+        
+        .mouse-left .mouse-blush {
+            left: 20px;
+        }
+        
+        .mouse-right .mouse-blush {
+            right: 20px;
+        }
+        
+        .mouse-tail {
+            position: absolute;
+            width: 100px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            top: 85px;
+            z-index: 1;
+        }
+        
+        .mouse-left .mouse-tail {
+            left: -80px;
+            transform: rotate(-20deg);
+        }
+        
+        .mouse-right .mouse-tail {
+            right: -80px;
+            transform: rotate(20deg);
+        }
+        
+        /* 小老鼠位置 */
+        .mouse-left {
+            left: 20%;
+        }
+        
+        .mouse-right {
+            right: 20%;
+        }
+        
+        /* 亲吻效果 */
+        .kiss-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            z-index: 6;
+        }
+        
+        .kiss-effect:before, .kiss-effect:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 100, 150, 0.8);
+            border-radius: 50%;
+        }
+        
+        .kiss-effect:before {
+            transform: translate(-50%, -50%);
+        }
+        
+        .kiss-effect:after {
+            transform: translate(0, -50%);
+        }
+        
+        /* 动画效果 */
+        @keyframes kiss {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes hearts {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3) rotate(360deg); opacity: 0; }
+        }
+        
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            color: #ff4081;
+            opacity: 0;
+            z-index: 4;
+            font-size: 24px;
+        }
+        
+        .message {
+            font-size: 42px;
+            color: #d81b60;
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .title {
+            font-size: 48px;
+            color: #d81b60;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="title">🐭 小老鼠和好游戏 🐭</h1>
+        
+        <div class="buttons" id="buttons">
+            <button id="yesBtn" class="btn">和好</button>
+            <button id="noBtn" class="btn">不和好</button>
+        </div>
+        
+        <div class="mice-container" id="miceContainer">
+            <!-- 左边小老鼠 -->
+            <div class="mouse mouse-left">
+                <div class="mouse-ear"></div>
+                <div class="mouse-body"></div>
+                <div class="mouse-eye"></div>
+                <div class="mouse-nose"></div>
+                <div class="mouse-blush"></div>
+                <div class="mouse-tail"></div>
+            </div>
+            
+            <!-- 右边小老鼠 -->
+            <div class="mouse mouse-right">
+                <div class="mouse-ear"></div>
+                <div class="mouse-body"></div>
+                <div class="mouse-eye"></div>
+                <div class="mouse-nose"></div>
+                <div class="mouse-blush"></div>
+                <div class="mouse-tail"></div>
+            </div>
+            
+            <!-- 亲吻效果 -->
+            <div class="kiss-effect" id="kissEffect"></div>
+            
+            <!-- 漂浮爱心 -->
+            <div class="heart">❤</div>
+            <div class="heart">❤</div>
+            <div class="heart">❤</div>
+        </div>
+        
+        <div class="message" id="message">小老鼠和好啦！永远做好朋友❤️</div>
+    </div>
+
+    <script>
+        // 初始化变量
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const miceContainer = document.getElementById('miceContainer');
+        const kissEffect = document.getElementById('kissEffect');
+        const message = document.getElementById('message');
+        const buttons = document.getElementById('buttons');
+        const body = document.body;
+        const hearts = document.querySelectorAll('.heart');
+        const title = document.querySelector('.title');
+
+        // 初始按钮大小
+        let noBtnScale = 1;
+        let yesBtnScale = 1;
+
+        // 点击"不和好"按钮的事件（移除了计数功能）
+        noBtn.addEventListener('click', function() {
+            // 缩小"不和好"按钮
+            noBtnScale *= 0.8;
+            noBtn.style.transform = `scale(${noBtnScale})`;
+            
+            // 放大"和好"按钮
+            yesBtnScale *= 1.2;
+            yesBtn.style.transform = `scale(${yesBtnScale})`;
+        });
+
+        // 点击"和好"按钮的事件
+        yesBtn.addEventListener('click', function() {
+            showKissAnimation();
+        });
+        
+        // 显示亲吻动画
+        function showKissAnimation() {
+            // 隐藏按钮
+            buttons.style.opacity = '0';
+            
+            // 显示小老鼠容器
+            miceContainer.style.display = 'block';
+            
+            // 添加漂浮动画
+            const mice = document.querySelectorAll('.mouse');
+            mice.forEach(mouse => {
+                mouse.style.animation = 'float 2s ease-in-out infinite';
+            });
+            
+            // 移动小老鼠到中间
+            setTimeout(() => {
+                document.querySelector('.mouse-left').style.left = '40%';
+                document.querySelector('.mouse-right').style.right = '40%';
+                
+                // 添加亲吻效果
+                setTimeout(() => {
+                    kissEffect.style.cssText = `
+                        width: 80px;
+                        height: 40px;
+                        animation: kiss 0.8s forwards, pulse 1.5s ease-in-out infinite 0.8s;
+                    `;
+                    
+                    // 添加爱心动画
+                    hearts.forEach((heart, index) => {
+                        heart.style.cssText = `
+                            font-size: ${30 + index * 15}px;
+                            animation: hearts ${1.8 + index * 0.3}s ease-out ${index * 0.2}s forwards;
+                            transform: translate(-50%, -50%) rotate(${index * 30}deg);
+                        `;
+                    });
+                    
+                    // 显示消息
+                    setTimeout(() => {
+                        message.style.opacity = '1';
+                        title.style.animation = 'float 3s ease-in-out infinite';
+                    }, 1000);
+                }, 1000);
+            }, 100);
+        }
+        
+        // 初始随机位置
+        document.querySelectorAll('.mouse').forEach(mouse => {
+            mouse.style.transform = `translateY(${Math.random() * 20 - 10}px)`;
+        });
+    </script>
+</body>
+</html>

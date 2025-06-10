@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>宝贝</title>
+    <title>熊猫和好小游戏</title>
     <style>
         * {
             margin: 0;
@@ -300,6 +300,14 @@
             padding: 0 10px;
         }
 
+        .click-counter {
+            font-size: 24px;
+            color: #d81b60;
+            margin-top: 15px;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+            font-weight: bold;
+        }
+
         /* 手机响应式适配 */
         @media (max-width: 480px) {
             .game-container {
@@ -334,17 +342,23 @@
                 width: 100px;
                 height: 100px;
             }
+
+            .click-counter {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1 class="title">🐼 宝贝 🐼</h1>
+        <h1 class="title">🐼 熊猫和好游戏 🐼</h1>
         
         <div class="buttons" id="buttons">
             <button id="yesBtn" class="btn">和好</button>
             <button id="noBtn" class="btn">不和好</button>
         </div>
+        
+        <div class="click-counter" id="clickCounter">已点击不和好 <span id="count">0</span> 次</div>
         
         <div class="pandas-container" id="pandasContainer">
             <!-- 左边熊猫 -->
@@ -376,11 +390,13 @@
             <div class="heart">❤</div>
         </div>
         
-        <div class="message" id="message">和好啦！永远做好朋友❤️</div>
+        <div class="message" id="message">熊猫和好啦！永远做好朋友❤️</div>
     </div>
 
     <script>
         // 初始化变量
+        let clickCount = 0;
+        const maxClicks = 5;
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const pandasContainer = document.getElementById('pandasContainer');
@@ -390,6 +406,8 @@
         const body = document.body;
         const hearts = document.querySelectorAll('.heart');
         const title = document.querySelector('.title');
+        const countDisplay = document.getElementById('count');
+        const clickCounter = document.getElementById('clickCounter');
 
         // 初始按钮大小
         let noBtnScale = 1;
@@ -397,6 +415,11 @@
 
         // 点击"不和好"按钮的事件
         noBtn.addEventListener('click', function() {
+            if (clickCount >= maxClicks) return;
+            
+            clickCount++;
+            countDisplay.textContent = clickCount;
+            
             // 缩小"不和好"按钮
             noBtnScale *= 0.8;
             noBtn.style.transform = `scale(${noBtnScale})`;
@@ -404,6 +427,13 @@
             // 放大"和好"按钮
             yesBtnScale *= 1.2;
             yesBtn.style.transform = `scale(${yesBtnScale})`;
+            
+            // 第五次点击时显示熊猫亲吻动画
+            if (clickCount === maxClicks) {
+                setTimeout(() => {
+                    showKissAnimation();
+                }, 500);
+            }
         });
 
         // 点击"和好"按钮的事件
@@ -413,9 +443,10 @@
         
         // 显示亲吻动画
         function showKissAnimation() {
-            // 隐藏按钮
+            // 隐藏按钮和计数器
             buttons.style.opacity = '0';
             buttons.style.pointerEvents = 'none';
+            clickCounter.style.display = 'none';
             
             // 显示熊猫容器
             pandasContainer.style.display = 'block';

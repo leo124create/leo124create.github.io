@@ -2,8 +2,8 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>宝贝</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>和好啦！</title>
     <style>
         * {
             margin: 0;
@@ -13,43 +13,47 @@
         
         body {
             background: radial-gradient(circle, #ffc0cb, #ffb6c1);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
             overflow: hidden;
+            touch-action: manipulation;
         }
         
         .game-container {
             text-align: center;
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 500px;
             padding: 20px;
         }
         
         .buttons {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 40px;
-            margin: 30px 0;
+            gap: 20px;
+            margin: 20px 0;
             transition: opacity 0.5s ease;
         }
         
         .btn {
-            padding: 22px 50px;
-            font-size: 32px;
+            padding: 16px 40px;
+            font-size: 28px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             font-weight: bold;
             position: relative;
             overflow: hidden;
             z-index: 10;
-            min-width: 180px;
+            min-width: 140px;
+            flex: 1;
+            max-width: 200px;
         }
         
         .btn:before {
@@ -61,12 +65,12 @@
             height: 100%;
             background: rgba(255, 255, 255, 0.3);
             transform: scale(0);
-            transition: transform 0.5s ease;
+            transition: transform 0.3s ease;
             border-radius: 50px;
             z-index: -1;
         }
         
-        .btn:hover:before {
+        .btn:hover:before, .btn:active:before {
             transform: scale(1);
         }
         
@@ -82,157 +86,133 @@
             transform: scale(1);
         }
         
-        .mice-container {
+        .pandas-container {
             position: relative;
             width: 100%;
-            height: 400px;
-            margin-top: 20px;
+            height: 300px;
+            margin: 20px auto;
             display: none;
         }
         
-        /* 超可爱小老鼠样式 */
-        .mouse {
+        /* 超可爱熊猫样式 */
+        .panda {
             position: absolute;
             width: 150px;
-            height: 130px;
+            height: 160px;
             z-index: 5;
             top: 50%;
             transform: translateY(-50%);
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+            transition: all 1s ease;
         }
         
-        .mouse-body {
+        .panda-body {
             position: absolute;
             width: 120px;
-            height: 100px;
-            background: #f0f0f0;
+            height: 120px;
+            background: white;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             top: 20px;
         }
         
-        .mouse-ear {
+        .panda-ear {
             position: absolute;
             width: 50px;
             height: 50px;
-            background: #e0e0e0;
+            background: #333;
             border-radius: 50%;
-            top: 0;
+            top: 5px;
             z-index: 2;
         }
         
-        .mouse-left .mouse-ear:first-child {
-            left: 15px;
+        .panda-left .panda-ear:first-child {
+            left: 10px;
         }
         
-        .mouse-right .mouse-ear:first-child {
-            right: 15px;
+        .panda-right .panda-ear:first-child {
+            right: 10px;
         }
         
-        .mouse-ear:before {
-            content: '';
+        .panda-eye {
             position: absolute;
-            width: 65%;
-            height: 65%;
-            background: #ffb6c1;
+            width: 30px;
+            height: 30px;
+            background: #333;
             border-radius: 50%;
-            top: 17.5%;
-            left: 17.5%;
-        }
-        
-        .mouse-eye {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #000;
-            border-radius: 50%;
-            top: 45px;
+            top: 50px;
             z-index: 3;
         }
         
-        .mouse-left .mouse-eye {
-            left: 35px;
+        .panda-left .panda-eye {
+            left: 30px;
         }
         
-        .mouse-right .mouse-eye {
-            right: 35px;
+        .panda-right .panda-eye {
+            right: 30px;
         }
         
-        .mouse-eye:before {
+        .panda-eye:before {
             content: '';
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background: white;
             border-radius: 50%;
-            top: 4px;
-            left: 4px;
+            top: 7px;
+            left: 7px;
         }
         
-        .mouse-nose {
+        .panda-nose {
             position: absolute;
-            width: 15px;
+            width: 20px;
             height: 15px;
             background: #ff9ebb;
             border-radius: 50%;
-            top: 70px;
+            top: 80px;
             z-index: 4;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
-        .mouse-left .mouse-nose {
-            left: 60px;
-        }
-        
-        .mouse-right .mouse-nose {
-            right: 60px;
-        }
-        
-        .mouse-blush {
+        .panda-mouth {
             position: absolute;
             width: 25px;
-            height: 15px;
-            background: #ffb6c1;
-            opacity: 0.6;
-            border-radius: 50%;
-            top: 55px;
-            z-index: 3;
+            height: 10px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 50% 50%;
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
-        .mouse-left .mouse-blush {
-            left: 20px;
-        }
-        
-        .mouse-right .mouse-blush {
-            right: 20px;
-        }
-        
-        .mouse-tail {
+        .panda-arm {
             position: absolute;
-            width: 100px;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 8px;
+            width: 40px;
+            height: 25px;
+            background: #333;
+            border-radius: 20px;
             top: 85px;
             z-index: 1;
         }
         
-        .mouse-left .mouse-tail {
-            left: -80px;
-            transform: rotate(-20deg);
+        .panda-left .panda-arm {
+            left: -20px;
+            transform: rotate(-30deg);
         }
         
-        .mouse-right .mouse-tail {
-            right: -80px;
-            transform: rotate(20deg);
+        .panda-right .panda-arm {
+            right: -20px;
+            transform: rotate(30deg);
         }
         
-        /* 小老鼠位置 */
-        .mouse-left {
-            left: 20%;
+        /* 熊猫位置 */
+        .panda-left {
+            left: 15%;
         }
         
-        .mouse-right {
-            right: 20%;
+        .panda-right {
+            right: 15%;
         }
         
         /* 亲吻效果 */
@@ -278,7 +258,7 @@
         
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
         }
         
         @keyframes hearts {
@@ -298,52 +278,93 @@
         }
         
         .message {
-            font-size: 42px;
+            font-size: 32px;
             color: #d81b60;
-            margin-top: 30px;
+            margin: 15px auto;
+            padding: 10px 20px;
             opacity: 0;
             transition: opacity 1s ease;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
             font-weight: bold;
             letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            max-width: 90%;
         }
         
         .title {
-            font-size: 48px;
+            font-size: 36px;
             color: #d81b60;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
+            padding: 0 10px;
+        }
+
+        /* 手机响应式适配 */
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 10px;
+            }
+            
+            .btn {
+                padding: 14px 30px;
+                font-size: 24px;
+                min-width: 120px;
+            }
+            
+            .title {
+                font-size: 30px;
+            }
+            
+            .message {
+                font-size: 28px;
+                padding: 8px 15px;
+            }
+            
+            .pandas-container {
+                height: 250px;
+            }
+            
+            .panda {
+                width: 130px;
+                height: 140px;
+            }
+            
+            .panda-body {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1 class="title">🐭 宝贝 🐭</h1>
+        <h1 class="title">🐼 和好啦！ 🐼</h1>
         
         <div class="buttons" id="buttons">
             <button id="yesBtn" class="btn">和好</button>
             <button id="noBtn" class="btn">不和好</button>
         </div>
         
-        <div class="mice-container" id="miceContainer">
-            <!-- 左边小老鼠 -->
-            <div class="mouse mouse-left">
-                <div class="mouse-ear"></div>
-                <div class="mouse-body"></div>
-                <div class="mouse-eye"></div>
-                <div class="mouse-nose"></div>
-                <div class="mouse-blush"></div>
-                <div class="mouse-tail"></div>
+        <div class="pandas-container" id="pandasContainer">
+            <!-- 左边熊猫 -->
+            <div class="panda panda-left">
+                <div class="panda-ear"></div>
+                <div class="panda-body"></div>
+                <div class="panda-eye"></div>
+                <div class="panda-nose"></div>
+                <div class="panda-mouth"></div>
+                <div class="panda-arm"></div>
             </div>
             
-            <!-- 右边小老鼠 -->
-            <div class="mouse mouse-right">
-                <div class="mouse-ear"></div>
-                <div class="mouse-body"></div>
-                <div class="mouse-eye"></div>
-                <div class="mouse-nose"></div>
-                <div class="mouse-blush"></div>
-                <div class="mouse-tail"></div>
+            <!-- 右边熊猫 -->
+            <div class="panda panda-right">
+                <div class="panda-ear"></div>
+                <div class="panda-body"></div>
+                <div class="panda-eye"></div>
+                <div class="panda-nose"></div>
+                <div class="panda-mouth"></div>
+                <div class="panda-arm"></div>
             </div>
             
             <!-- 亲吻效果 -->
@@ -362,7 +383,7 @@
         // 初始化变量
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
-        const miceContainer = document.getElementById('miceContainer');
+        const pandasContainer = document.getElementById('pandasContainer');
         const kissEffect = document.getElementById('kissEffect');
         const message = document.getElementById('message');
         const buttons = document.getElementById('buttons');
@@ -374,7 +395,7 @@
         let noBtnScale = 1;
         let yesBtnScale = 1;
 
-        // 点击"不和好"按钮的事件（移除了计数功能）
+        // 点击"不和好"按钮的事件
         noBtn.addEventListener('click', function() {
             // 缩小"不和好"按钮
             noBtnScale *= 0.8;
@@ -394,20 +415,21 @@
         function showKissAnimation() {
             // 隐藏按钮
             buttons.style.opacity = '0';
+            buttons.style.pointerEvents = 'none';
             
-            // 显示小老鼠容器
-            miceContainer.style.display = 'block';
+            // 显示熊猫容器
+            pandasContainer.style.display = 'block';
             
             // 添加漂浮动画
-            const mice = document.querySelectorAll('.mouse');
-            mice.forEach(mouse => {
-                mouse.style.animation = 'float 2s ease-in-out infinite';
+            const pandas = document.querySelectorAll('.panda');
+            pandas.forEach(panda => {
+                panda.style.animation = 'float 2s ease-in-out infinite';
             });
             
-            // 移动小老鼠到中间
+            // 移动熊猫到中间
             setTimeout(() => {
-                document.querySelector('.mouse-left').style.left = '40%';
-                document.querySelector('.mouse-right').style.right = '40%';
+                document.querySelector('.panda-left').style.left = '35%';
+                document.querySelector('.panda-right').style.right = '35%';
                 
                 // 添加亲吻效果
                 setTimeout(() => {
@@ -419,11 +441,13 @@
                     
                     // 添加爱心动画
                     hearts.forEach((heart, index) => {
-                        heart.style.cssText = `
-                            font-size: ${30 + index * 15}px;
-                            animation: hearts ${1.8 + index * 0.3}s ease-out ${index * 0.2}s forwards;
-                            transform: translate(-50%, -50%) rotate(${index * 30}deg);
-                        `;
+                        setTimeout(() => {
+                            heart.style.cssText = `
+                                font-size: ${30 + index * 15}px;
+                                animation: hearts ${1.8 + index * 0.3}s ease-out forwards;
+                                transform: translate(-50%, -50%) rotate(${index * 30}deg);
+                            `;
+                        }, index * 200);
                     });
                     
                     // 显示消息
@@ -431,13 +455,13 @@
                         message.style.opacity = '1';
                         title.style.animation = 'float 3s ease-in-out infinite';
                     }, 1000);
-                }, 1000);
+                }, 800);
             }, 100);
         }
         
         // 初始随机位置
-        document.querySelectorAll('.mouse').forEach(mouse => {
-            mouse.style.transform = `translateY(${Math.random() * 20 - 10}px)`;
+        document.querySelectorAll('.panda').forEach(panda => {
+            panda.style.transform = `translateY(${Math.random() * 20 - 10}px)`;
         });
     </script>
 </body>
